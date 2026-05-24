@@ -43,6 +43,26 @@ Open `http://localhost:8000`. Pick a preset or write your own DSL code and click
 
 ---
 
+## Deploying
+
+The app is containerized. A `Dockerfile` is included in the repository.
+
+**Render (free tier):**
+1. Push the repo to GitHub
+2. Create a new Web Service on Render, select the repository, and set Runtime to **Docker**
+3. Add environment variables: `APP_ENV=production`, `APP_KEY` (generate with `php artisan key:generate --show`), `APP_DEBUG=false`, `SESSION_DRIVER=file`, `LOG_CHANNEL=stderr`
+4. Deploy — first build takes 3–5 minutes
+
+The free tier spins down after 15 minutes of inactivity. Cold start on the next request takes ~30 seconds. Storage is ephemeral, which does not matter here since there is nothing to persist.
+
+**Locally via Docker:**
+```bash
+docker build -t wavecraft .
+docker run -e APP_KEY=$(php artisan key:generate --show) -p 8000:8000 wavecraft
+```
+
+---
+
 ## DSL syntax
 
 ```
