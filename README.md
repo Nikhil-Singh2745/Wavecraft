@@ -1,6 +1,6 @@
 # WaveCraft
 
-A web-based audio synthesizer that takes music written in a custom domain-specific language and renders it as a downloadable, playable WAV file. No external audio libraries are involved — the synthesis pipeline is implemented entirely in PHP.
+A web-based audio synthesizer that takes music written in a custom domain-specific language and renders it as a downloadable, playable WAV file. No external audio libraries are involved - the synthesis pipeline is implemented entirely in PHP.
 
 ---
 
@@ -12,7 +12,7 @@ You write music in a small notation language directly in the browser. The server
 
 ## Why this exists
 
-I wanted to build something technically non-trivial in PHP that isn't a CRUD application. Audio synthesis in PHP is unusual enough to be interesting — almost nobody uses PHP for DSP work. The project touches three distinct areas: language design (lexer + recursive descent parser), digital signal processing (oscillators, envelope shaping, mixing), and binary file construction (WAV format via `pack()`).
+I wanted to build something technically non-trivial in PHP that isn't a CRUD application. Audio synthesis in PHP is unusual enough to be interesting - almost nobody uses PHP for DSP work. The project touches three distinct areas: language design (lexer + recursive descent parser), digital signal processing (oscillators, envelope shaping, mixing), and binary file construction (WAV format via `pack()`).
 
 ---
 
@@ -20,7 +20,7 @@ I wanted to build something technically non-trivial in PHP that isn't a CRUD app
 
 - PHP 8.2
 - Laravel 12 (routing, controllers, Blade templating)
-- Vanilla JS frontend — no build step, no npm, no framework
+- Vanilla JS frontend - no build step, no npm, no framework
 - HTML5 Canvas for waveform visualization
 - HTML5 Audio API for playback
 
@@ -51,7 +51,7 @@ The app is containerized. A `Dockerfile` is included in the repository.
 1. Push the repo to GitHub
 2. Create a new Web Service on Render, select the repository, and set Runtime to **Docker**
 3. Add environment variables: `APP_ENV=production`, `APP_KEY` (generate with `php artisan key:generate --show`), `APP_DEBUG=false`, `SESSION_DRIVER=file`, `LOG_CHANNEL=stderr`
-4. Deploy — first build takes 3–5 minutes
+4. Deploy - first build takes 3–5 minutes
 
 The free tier spins down after 15 minutes of inactivity. Cold start on the next request takes ~30 seconds. Storage is ephemeral, which does not matter here since there is nothing to persist.
 
@@ -77,12 +77,12 @@ sequence [C4, D4, E4, F4, G4] sixteenth
 ```
 
 **Statements:**
-- `tempo <bpm>` — set tempo, 20–400 BPM
-- `instrument <sine|square|saw|triangle>` — set waveform type
-- `play <note> <duration>` — single note (e.g. `C4`, `A#3`, `Db5`)
-- `rest <duration>` — silence
-- `chord [n, n, ...] <duration>` — notes played simultaneously
-- `sequence [n, n, ...] <duration>` — notes played in rapid succession, total time divided evenly
+- `tempo <bpm>` - set tempo, 20–400 BPM
+- `instrument <sine|square|saw|triangle>` - set waveform type
+- `play <note> <duration>` - single note (e.g. `C4`, `A#3`, `Db5`)
+- `rest <duration>` - silence
+- `chord [n, n, ...] <duration>` - notes played simultaneously
+- `sequence [n, n, ...] <duration>` - notes played in rapid succession, total time divided evenly
 
 **Durations:** `whole`, `half`, `quarter`, `eighth`, `sixteenth`
 
@@ -95,18 +95,18 @@ sequence [C4, D4, E4, F4, G4] sixteenth
 ```
 app/Synth/
   Language/
-    Lexer.php          — tokenizes the DSL source string
-    Parser.php         — recursive descent parser → AST
-    Token.php          — Token value object
-    TokenType.php      — enum of token types
-    Ast/               — one file per AST node class
+    Lexer.php          - tokenizes the DSL source string
+    Parser.php         - recursive descent parser → AST
+    Token.php          - Token value object
+    TokenType.php      - enum of token types
+    Ast/               - one file per AST node class
   Audio/
-    Oscillator.php     — sine, square, sawtooth, triangle waveform generators
-    Envelope.php       — ADSR amplitude envelope
-    NoteFrequency.php  — note name → Hz (equal temperament, A4 = 440 Hz)
-    Renderer.php       — walks AST, emits PCM float samples
+    Oscillator.php     - sine, square, sawtooth, triangle waveform generators
+    Envelope.php       - ADSR amplitude envelope
+    NoteFrequency.php  - note name → Hz (equal temperament, A4 = 440 Hz)
+    Renderer.php       - walks AST, emits PCM float samples
   Wav/
-    WavEncoder.php     — float samples → 16-bit PCM → RIFF WAV binary
+    WavEncoder.php     - float samples → 16-bit PCM → RIFF WAV binary
 
 app/Http/Controllers/SynthController.php
 resources/views/synth.blade.php
@@ -136,7 +136,7 @@ Because using the wrong tool for a job in an interesting way is more educational
 
 ## Known limitations
 
-**Performance:** PHP is not fast at tight numeric loops. Generating a 30-second piece at 44100 Hz means roughly 1.3 million iterations of the oscillator loop. On a low-end server this takes a few seconds. There is no streaming or incremental rendering — the entire WAV is computed synchronously before any response is sent.
+**Performance:** PHP is not fast at tight numeric loops. Generating a 30-second piece at 44100 Hz means roughly 1.3 million iterations of the oscillator loop. On a low-end server this takes a few seconds. There is no streaming or incremental rendering - the entire WAV is computed synchronously before any response is sent.
 
 **No polyphony within a single `play` statement:** Only `chord` allows simultaneous notes. A `play` statement always produces a single wave. You cannot layer two `play` statements in time.
 
